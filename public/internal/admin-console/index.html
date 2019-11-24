@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Admin Console</title>
+    <link rel="stylesheet" href="../css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/vendor/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="../css/main.css" type="text/css">
+    <link rel="stylesheet" href="../css/internal/dashboard.css" type="text/css">
+  </head>
+  <body>
+    <script src="/__/firebase/7.5.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.5.0/firebase-auth.js"></script>
+    <script src="/__/firebase/7.5.0/firebase-database.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script type="text/javascript" src="../../js/vendor/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="../../js/vendor/bootstrap.min.js"></script>
+    <script>
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          if(user.email !== "admin.mathbowl@brandongong.org") {
+            window.location = "../dashboard/index.html";
+          }
+        } else {
+          window.location = "../login.html";
+        }
+      });
+    </script>
+  </body>
+</html>

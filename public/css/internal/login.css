@@ -1,0 +1,67 @@
+body {
+  overflow: hidden;
+}
+
+h2 {
+  font-family: "Jost Medium", Arial, Helvetica, sans-serif;
+  font-size: 60px;
+  margin-bottom: 5px;
+}
+
+#container {
+  display: flex;
+  width: 500px;
+  justify-content: center;
+  margin: 0 auto;
+  height: 70vh;
+  flex-direction: column;
+}
+
+input {
+  border: none;
+  border-bottom: 3px solid #ddd;
+  margin: 20px 0px;
+  font-family: "Jost";
+  font-size: 25px;
+  padding-left: 10px;
+}
+input:focus {
+  border-bottom: 3px solid #9e1c43;
+}
+
+::placeholder {
+  color: #bbb;
+}
+
+#submitbutton {
+  padding: 7px 10px;
+  border: 2px solid #9e1c43;
+  font-family: "Jost Medium";
+  font-size: 20px;
+  color: #9e1c43;
+  align-self: center;
+  text-decoration: none;
+  margin-top: 40px;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  cursor: pointer;
+}
+
+#submitbutton:focus {
+  border: 2px solid #9e1c43;
+  outline: none;
+}
+
+#submitbutton:hover {
+  background-color: #9e1c43;
+  color: white;
+}
+
+#message {
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  color: #9e1c43;
+  font-size: 18px;
+  margin: 0;
+}

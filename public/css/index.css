@@ -1,0 +1,22 @@
+p {
+  font-family: "Jost Black";
+  font-size: 30vh;
+  line-height: 1;
+  margin: 0;
+}
+
+#wrap {
+  width: 5vw;
+  text-justify: distribute;
+}
+
+body {
+  padding: 5vh;
+}
+
+#dragon {
+  height: 2vh;
+  margin-bottom: 5vh;
+  margin-right: 0vh;
+  display: inline-block;
+}
