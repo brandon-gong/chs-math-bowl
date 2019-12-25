@@ -2,13 +2,45 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Admin Console</title>
-    <link rel="stylesheet" href="../css/vendor/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/vendor/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="../css/main.css" type="text/css">
-    <link rel="stylesheet" href="../css/internal/dashboard.css" type="text/css">
+    <title>Admin Console | CHS Math Bowl</title>
+    <link rel="stylesheet" href="../../css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/vendor/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="../../css/main.css" type="text/css">
+    <link rel="stylesheet" href="../../css/internal/admin-console.css" type="text/css">
+    <style>
+      #grid {
+        position: relative;
+      }
+    </style>
   </head>
-  <body>
+  <body onload="startTime()">
+
+    <div id="nav">
+      <img src="../../dragon.svg" id="dragon">
+      <h3>chs math</h3>
+      <div id="spacer"></div>
+      <a href="#" id="current">Overview</a>
+      <a href="teams.html">School Teams</a>
+      <a href="rounds.html">Matches Setup</a>
+      <a href="scores.html">Scores</a>
+      <a href="display.html">Display Switcher</a>
+      <a href="settings.html">Other Settings</a>
+      <a onclick="signOut()">Sign out</a>
+    </div>
+
+    <div id="wrapper">
+      <h1>Overview</h1>
+      <div class="card" id="main">
+        <h2 style="margin-left: 30px">Match Progress</h2>
+        <div id="upperlabels" style="display: flex; flex-direction: row; position: relative;align-items:baseline;"></div>
+        <div id="leftlabels" style="position: relative"></div>
+        <div id="grid"></div>
+      </div>
+      <div class="card" id="time">
+        fishy
+      </div>
+    </div>
+
     <script src="/__/firebase/7.5.0/firebase-app.js"></script>
     <script src="/__/firebase/7.5.0/firebase-auth.js"></script>
     <script src="/__/firebase/7.5.0/firebase-database.js"></script>
@@ -25,6 +57,96 @@
           window.location = "../login.html";
         }
       });
+
+      function signOut() {
+        firebase.auth().signOut().then(function() {
+          window.location = "../login.html";
+        }).catch(function(error) {});
+      }
+    </script>
+    <script>
+      function startTime() {
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var s = today.getSeconds();
+        m = checkTime(m);
+        s = checkTime(s);
+        document.getElementById('time').innerHTML =
+        h + ":" + m + ":" + s;
+        var t = setTimeout(startTime, 500);
+      }
+      function checkTime(i) {
+        if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+        return i;
+      }
+
+      // grid
+      let m = 18;
+      let n = 10;
+      let space = 4;
+      let br = 2;
+      //let squares = new Array(m).fill(new Array(n).fill(null));
+      let squares = [];
+      for(let i = 0; i < m; i++) squares.push([]);
+      let margins = 30;
+
+      let size = (document.getElementById("grid").clientWidth - margins*4 - (m - 1) * space - 45) / m;
+      document.getElementById("grid").innerHTML = "";
+
+      let fontSize = 12;
+
+      let leftLabels = new Array(n);
+
+      //testcase
+      for(let i = 0; i < n; i++) {
+        leftLabels[i] = "Room " + (200+i);
+      }
+
+      let maxClientWidth = 0;
+      for(let i = 0; i < n; i++) {
+        let x = document.createElement("div");
+        x.innerHTML = leftLabels[i];
+        x.style.cssText = `font-family:"Jost";font-size:${fontSize}px;left:${margins}px;top:${i*(size+space) + 0.5*size - 8.5}px;color:black;position:absolute`;
+        document.getElementById("leftlabels").appendChild(x);
+        if(x.clientWidth > maxClientWidth) maxClientWidth = x.clientWidth;
+      }
+
+      let upperLabels = new Array(m);
+      upperLabels[m-1] = "Sudden Death";
+      upperLabels[m-2] = "Tiebreaker 2";
+      upperLabels[m-3] = "Tiebreaker 1";
+      for(let i = 0; i < m-3; i++) upperLabels[i] = "Question " + (i+1);
+
+      let upperlabelgap = size + space; // some gore to get the sizing right
+      
+      let maxClientHeight = 0;
+      let maxClientWidth1 = 0;
+      for(let i = 0; i < m; i++) {
+        let x = document.createElement("div");
+        x.innerHTML = upperLabels[i];
+        x.style.cssText = `font-family:"Jost";font-size:${fontSize}px;left:${margins + i*upperlabelgap+size*0.2 + maxClientWidth + 10 }px;color:black;transform:rotate(-45deg);position:absolute`;
+        document.getElementById("upperlabels").appendChild(x);
+        if(x.clientHeight > maxClientHeight) maxClientHeight = x.clientHeight;
+        if(x.clientWidth > maxClientWidth1) maxClientWidth1 = x.clientWidth;
+        x.style.top = maxClientHeight + "px";
+      }
+      document.getElementById("upperlabels").style.height = Math.sqrt(maxClientHeight*maxClientHeight + maxClientWidth1*maxClientWidth1) - 15 +"px";
+
+      // mxn squares, length of which are determined by width of container / m
+      let colors = ["#9e1c43", "#aaa", "#ffbb00"];
+
+      for(let i = 0; i < m; i++) {
+        for(let j = 0; j < n; j++) {
+          squares[i][j] = document.createElement("div");
+          squares[i][j].style.cssText = `width:${size}px; height:${size}px; background-color:${colors[Math.floor(Math.random() * 3)]}; position:absolute; top:${j*(size + space)}px; left:${margins + maxClientWidth + 10 +i*(size + space)}px;`;
+          squares[i][j].title = `(${i},${j})`;
+          document.getElementById("grid").appendChild(squares[i][j]);
+        }
+      }
+      squares[4][3].style.backgroundColor = "#aaa";
+      squares[14][6].style.backgroundColor = "#aaa";
+      document.getElementById("grid").style.height = 2*margins + n*(space + size) - space + "px";
     </script>
   </body>
 </html>

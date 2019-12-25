@@ -1,0 +1,93 @@
+#nav {
+  position: fixed;
+  height: 100%;
+  width: 300px;
+  margin-left: 50px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+#wrapper {
+  margin-left: 350px;
+  width: calc(100% - 350px);
+  padding: 40px;
+  padding-left: 80px;
+  padding-right: 80px;
+}
+
+#nav > a, #nav > a:visited {
+  color: black;
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  margin-top: 10px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+a:focus {
+  outline: none;
+  text-decoration: none;
+}
+
+h3 {
+  color: black;
+  font-family: "Jost Bold", Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  align-self: center;
+  font-size: 40px;
+}
+
+h1 {
+  color: black;
+  text-transform: none;
+  text-align: left;
+  font-size: 100px;
+  font-family: "Jost Thin";
+  margin-bottom: 30px;
+  margin-left: -30px;
+}
+
+h2 {
+  color: black;
+  font-family: "Jost Medium";
+  font-size: 30px;
+  margin-bottom: 30px;
+}
+
+#nav > a:hover {
+  color: #9e1c43;
+  text-decoration: none;
+}
+
+a#current {
+  font-family: "Jost Bold", Arial, Helvetica, sans-serif;
+}
+
+body {
+  padding: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+#dragon {
+  height: 100px;
+  margin-top: 5vh;
+}
+
+#spacer {
+  height: 8px;
+  width: 40px;
+  background-color: #9e1c43;
+  margin-top: 15px;
+  margin-bottom: 30px;
+  align-self: center;
+}
+
+.card {
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px 0px #ddd;
+  padding: 10px;
+  margin: 10px;
+  background-color: white;
+}

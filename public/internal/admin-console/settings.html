@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Admin Console | CHS Math Bowl</title>
+    <link rel="stylesheet" href="../../css/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/vendor/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="../../css/main.css" type="text/css">
+    <link rel="stylesheet" href="../../css/internal/admin-console.css" type="text/css">
+    <style>
+      .greek {
+        color: #9e1c43;
+        font-size: 20px;
+        margin-left: 5px;
+      }
+      .user-header {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        margin-bottom: 10px;
+      }
+      .write-changes, .write-changes:focus, .write-changes:visited {
+        background-color: #9e1c43;
+        padding: 4px 10px;
+        font-size: 12px;
+        font-family: "Jost";
+        border-radius: 4px;
+        color: white;
+        outline: none;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .write-changes:hover {
+        background-color: #ffbb00;
+        color: black;
+        text-decoration: none;
+      }
+      input {
+        border: none;
+        border-bottom: 3px solid #ddd;
+        font-family: "Jost";
+        font-size: 15px;
+        padding-left: 10px;
+        flex-grow: 1;
+      }
+      input:focus {
+        border-bottom: 3px solid #9e1c43;
+        outline: none;
+      }
+      ::placeholder {
+        color: #bbb;
+        font-family: "Jost Italic";
+      }
+      .inputs {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+      }
+      p {
+        font-family: "Jost";
+        font-size: 15px;
+        color: black;
+        white-space: nowrap;
+      }
+      .input-group {
+        display: flex;
+        flex-direction: row;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id="nav">
+      <img src="../../dragon.svg" id="dragon">
+      <h3>chs math</h3>
+      <div id="spacer"></div>
+      <a href="index.html">Overview</a>
+      <a href="teams.html">School Teams</a>
+      <a href="rounds.html">Matches Setup</a>
+      <a href="scores.html">Scores</a>
+      <a href="display.html">Display Switcher</a>
+      <a href="#" id="current">Other Settings</a>
+      <a onclick="signOut()">Sign out</a>
+    </div>
+
+    <div id="wrapper">
+      <h1>Settings</h1>
+      <h2>Volunteer Accounts</h2>
+      <p style="white-space: normal;">
+        Below, log room numbers and names of the people associated with the different volunteer accounts.
+        Accounts without room numbers are considered "disabled", i.e. they cannot be used for running matches and will not show up as an option when you create new matches.
+        Refresh the page to see updates in enabled/disabled state when you add or delete the room number of an account.
+      </p>
+      <p style="margin-bottom: 30px;">Room names and number data are saved automatically after you click away from the textbox after editing.</p>
+      <div id="volcards">
+        <p>Loading user data...</p>
+      </div>
+    </div>
+
+    <script src="/__/firebase/7.5.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.5.0/firebase-auth.js"></script>
+    <script src="/__/firebase/7.5.0/firebase-database.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script type="text/javascript" src="../../js/vendor/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="../../js/vendor/bootstrap.min.js"></script>
+    <script>
+
+      // table of greek
+      let greeks={"alpha":"α","beta":"β","gamma":"γ","delta":"δ","epsilon":"ε","zeta":"ζ","eta":"η","theta":"θ","iota":"ι","kappa":"κ","lambda":"λ","mu":"μ","nu":"ν","xi":"ξ","omicron":"ο","pi":"π","rho":"ρ","sigma":"σ","tau":"τ","upsilon":"υ","phi":"φ","chi":"χ","psi":"ψ","omega":"ω"};
+      
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          if(user.email !== "admin.mathbowl@brandongong.org") {
+            window.location = "../dashboard/index.html";
+          }
+          let ih = "";
+          firebase.database().ref('/rooms').once('value').then(function(snap) {
+            for(let user of Object.keys(snap.val())) {
+              let isDisabled = (snap.val()[user].number === undefined);
+              ih += '<div class="card">' +
+                    '  <div class="user-header">' +
+                    '      <span class="greek" ' + ((isDisabled) ? 'style="color: #888"' : '') + '>' + greeks[user] + ' | ' + user +  ((isDisabled) ? ' (disabled)' : '') + '</span>' +
+                    // '      <a onclick=updateUserData(\"' + user + '\") class="write-changes" ' + ((isDisabled) ? 'style="background-color: #888"' : '') + '>Write changes</a>' +
+                    '  </div>' +
+                    '  <div class="inputs">' +
+                    '      <div style="width: 10px"></div>' +
+                    '    <div class="input-group" style="flex-grow: 4;">' +
+                    '      <p style="margin-top: 10px; margin-right: 8px;">Names:</p>' +
+                    '      <input id="names_' + user + '" placeholder="Names of the volunteers in this room to help you remember" type="text" value="' + ((snap.val()[user].names === undefined) ? "" : snap.val()[user].names) +'"  onchange=updateUserData(\"' + user + '\") >' +
+                    '    </div>' +
+                    '    <div style="width: 20px"></div>' +
+                    '    <div class="input-group" style="flex-grow: 1">' +
+                    '      <p style="margin-top: 10px; margin-right: 8px;">Room #:</p>' +
+                    '      <input id="number_' + user + '" placeholder="ex. 210" type="text" value="' + ((isDisabled) ? "" : snap.val()[user].number) +'" onchange=updateUserData(\"' + user + '\") >' +
+                    '    </div>' +
+                    '    <div style="width: 10px"></div>' +
+                    '  </div>' +
+                    '</div>';
+            }
+            document.getElementById("volcards").innerHTML = ih;
+          });
+
+        } else {
+          window.location = "../login.html";
+        }
+      });
+
+      function signOut() {
+        firebase.auth().signOut().then(function() {
+          window.location = "../login.html";
+        }).catch(function(error) {});
+      }
+
+      function updateUserData(u) {
+        let updates = {};
+        updates["/rooms/" + u + "/names"] = (document.getElementById("names_" + u).value.trim()) ? (document.getElementById("names_" + u).value.trim()) : null;
+        updates["/rooms/" + u + "/number"] = (document.getElementById("number_" + u).value.trim()) ? (document.getElementById("number_" + u).value.trim()) : null;
+        return firebase.database().ref().update(updates);
+      }
+    </script>
+  </body>
+</html>

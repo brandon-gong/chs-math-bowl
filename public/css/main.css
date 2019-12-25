@@ -18,6 +18,10 @@
   font-family: "Jost Thin";
   src: url("font/jost/Jost-200-Thin.otf");
 }
+@font-face {
+  font-family: "Jost Italic";
+  src: url("font/jost/Jost-400-BookItalic.otf");
+}
 
 h1 {
   font-family: "Jost Medium", Futura, Helvetica, Arial, sans-serif;

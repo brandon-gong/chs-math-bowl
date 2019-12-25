@@ -27,6 +27,7 @@ input {
 }
 input:focus {
   border-bottom: 3px solid #9e1c43;
+  outline: none;
 }
 
 ::placeholder {
