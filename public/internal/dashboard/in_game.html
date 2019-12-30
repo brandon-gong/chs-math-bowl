@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Dashboard | CHS Math Bowl</title>
+    <link rel="stylesheet" href="../../css/main.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:700&display=swap" rel="stylesheet"> 
+    <style>
+      html, body {
+        padding: 0;
+        margin: 0;
+        user-select: none;
+        overflow: hidden;
+        /*cursor: none;*/
+      }
+      body {
+        cursor: none;
+      }
+      #logocontainer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        justify-content: center;
+        position: absolute;
+        top: 20px;
+      }
+      #container {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        font-family: "Jost";
+      }
+      #title {
+        font-family: "Jost Thin";
+        font-size: 50px;
+        color: #333;
+      }
+      #time {
+        font-family: "Jost Bold", Arial, Helvetica, sans-serif;
+        color: #333;
+        font-size: 100px;
+        margin: 100px 0px;
+        padding: 0px;
+      }
+
+      .card {
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px 0px #ddd;
+        padding: 10px;
+        background-color: white;
+        margin: 20px;
+        height: 230px;
+        width: 230px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: 200ms;
+      }
+
+      #scores-container {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .score {
+        color: #9e1c43;
+        font-family: "Jost", Arial, Helvetica, sans-serif;
+        font-size: 100px;
+      }
+
+      .abbrev {
+        color: #333;
+        font-family: "Jost Bold";
+        font-size: 40px;
+        text-transform: uppercase;
+      }
+
+      .card-hover > .abbrev {
+        text-decoration: 5px #eee underline;
+      }
+
+      .card-clicked {
+        background-color: #9e1c43 !important;
+      }
+      .card-clicked > .score, .card-clicked > .abbrev {
+        color: white !important;
+        text-decoration: none !important;
+      }
+      #logocontainer > #dragon {
+        height: 30px;
+        display: inline-block;
+      }
+      #logocontainer > h1 {
+        font-family: "Jost Medium", Futura, Helvetica, Arial, sans-serif;
+        text-transform: uppercase;
+        font-size: 20px;
+        color: #9e1c43;
+        text-align: center;
+      }
+
+      #overlay {
+        background-color: none;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      h4 {
+        font-family: "Jost Medium", Arial, Helvetica, sans-serif;
+        font-size: 66px;
+        margin: 0;
+      }
+      .resbox {
+        height: 30vh;
+        width: 80vw;
+        margin-top: 20px;
+        display: flex;
+        flex-direction: row;
+        border: 5px solid #9e1c43;
+        padding: 0 2.5vh;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .winner {
+        background-color: #9e1c43;
+        color: white;
+      }
+      .loser {
+        background-color: white;
+        color: #9e1c43;
+      }
+      .finalScore {
+        font-size: 25vh;
+        font-family: "Jost Thin", Arial, Helvetica, sans-serif;
+      }
+      .teamname {
+        font-family: "Jost", Arial, Helvetica, sans-serif;
+        font-size: 70px;
+        margin-right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="logocontainer">
+      <img src="../../dragon.svg" id="dragon">
+      <div style="width: 10px"></div>
+      <h1>chs math bowl</h1>
+    </div>
+    <div id="overlay"></div>
+    <div id="container">
+      Authenticating...
+    </div>
+
+    <script src="/__/firebase/7.5.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.5.0/firebase-auth.js"></script>
+    <script src="/__/firebase/7.5.0/firebase-database.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script>
+      
+      let numquestions = 18;
+      let currentQuestion = 0;
+      let timePerQuestion = 120000;
+
+      let timerIsRunning = false;
+      let timeRemaining = timePerQuestion;
+      let t1Score = 0;
+      let t2Score = 0;
+      let matchResults = new Array(numquestions).fill(0);
+      let t0,tInt;
+
+      let listen = false;
+
+      let title = "";
+      let userr = "";
+
+      let roundID;
+      let ar = window.location.href.match(/in_game\.html\?roundID=(.+)/);
+      if(!ar) window.location = "index.html";
+      else roundID = ar[1];
+
+      let t1id = "";
+      let t2id = "";
+
+      let t1special = 0;
+      let t2special = 0;
+
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          if(user.email === "admin.mathbowl@brandongong.org") {
+            window.location = "../admin-console/index.html";
+          } else {
+            if(roundID === "special") {
+              document.body.style.cursor = "unset";
+              document.body.setAttribute('spellcheck', false);
+              document.getElementById("container").innerHTML = `
+                <div id="title" contentEditable="true">Custom round</div>
+                <div id="time">
+                  Loading...
+                </div>
+                <div id="scores-container">
+                  <div class="card">
+                    <div class="score" contentEditable="true">0</div>
+                    <div class="abbrev" contentEditable="true">TEAM1</div>
+                  </div>
+                  <div class="card">
+                    <div class="score" contentEditable="true">0</div>
+                    <div class="abbrev" contentEditable="true">TEAM2</div>
+                  </div>
+                </div>`;
+                document.getElementById("time").style.fontSize = "250px";
+                document.getElementById("time").style.fontFamily = "Roboto Mono";
+                document.getElementById("time").style.margin = "30px";
+                renderTime(timeRemaining);
+                document.addEventListener("keydown", (event) => {
+                  if(event.keyCode === 220 && !timerIsRunning) window.location = "index.html";
+                  switch(event.keyCode) {
+                    case 32:
+                      toggleTimer();
+                      break;
+                    case 82:
+                      t0 = null; clearInterval(tInt); tInt = null; timerIsRunning = false; timeRemaining = timePerQuestion; renderTime(timeRemaining);
+                      break;
+                    case 87:
+                      if(!timerIsRunning) {
+                        triggerLeft();
+                        setTimeout(detriggerLeft, 400);
+                        document.getElementsByClassName("score")[0].innerHTML = ++t1special;
+                      }
+                      break;
+                    case 83:
+                      if(!timerIsRunning) {
+                        triggerLeft();
+                        setTimeout(detriggerLeft, 400);
+                        document.getElementsByClassName("score")[0].innerHTML = --t1special;
+                      }
+                      break;
+                    case 38:
+                      if(!timerIsRunning) {
+                        triggerRight();
+                        setTimeout(detriggerRight, 400);
+                        document.getElementsByClassName("score")[1].innerHTML = ++t2special;
+                      }
+                      break;
+                    case 40:
+                      if(!timerIsRunning) {
+                        triggerRight();
+                        setTimeout(detriggerRight, 400);
+                        document.getElementsByClassName("score")[1].innerHTML = --t2special;
+                      }
+                      break;
+                  }
+                });
+            } else {
+              userr = user;
+              firebase.database().ref("/matches/"+roundID+"/"+user.email.split("\.")[0]).once('value').then((snap) => {
+
+                if(!snap.val()) window.location = "index.html";
+                else {
+                  document.getElementById("container").innerHTML = `
+                    <div id="title">Loading... - Question 1</div>
+                    <div id="time">
+                      Waiting for round to start...
+                    </div>
+                    <div id="scores-container">
+                      <div class="card">
+                        <div class="score">0</div>
+                        <div class="abbrev">TEAM1</div>
+                      </div>
+                      <div class="card">
+                        <div class="score">0</div>
+                        <div class="abbrev">TEAM2</div>
+                      </div>
+                    </div>`;
+
+                  let updates = {};
+                  updates["/matches/"+roundID+"/"+user.email.split("\.")[0]+"/status"] = 1;
+                  firebase.database().ref().update(updates);
+
+                  t1id = snap.val()["t1"];
+                  t2id = snap.val()["t2"];
+
+                  document.addEventListener("keydown", (event) => {
+                    if(event.keyCode === 220 && !timerIsRunning) window.location = "index.html";
+                    if(listen) {
+                      switch(event.keyCode) {
+                        case 32:
+                          toggleTimer();
+                          break;
+                        case 82:
+                          t0 = null; clearInterval(tInt); tInt = null; timerIsRunning = false; timeRemaining = timePerQuestion; renderTime(timeRemaining);
+                          break;
+                        case 37:
+                          if(!timerIsRunning) prev();
+                          break;
+                        case 39:
+                          if(!timerIsRunning) next();
+                          break;
+                        case 65:
+                          if(!timerIsRunning) {
+                            triggerLeft();
+                            detriggerRight();
+                            matchResults[currentQuestion] = 1;
+                            let qupdates = {};
+                            qupdates["/matches/"+roundID+"/"+user.email.split("\.")[0]+"/score/"+currentQuestion] = 1;
+                            firebase.database().ref().update(qupdates);
+                            updateScores();
+                            if(isLatest()) setTimeout(next, 800);
+                          }
+                          break;
+                        case 68:
+                          if(!timerIsRunning) {
+                            triggerRight();
+                            detriggerLeft();
+                            matchResults[currentQuestion] = 2;
+                            let qupdates = {};
+                            qupdates["/matches/"+roundID+"/"+user.email.split("\.")[0]+"/score/"+currentQuestion] = 2;
+                            firebase.database().ref().update(qupdates);
+                            updateScores();
+                            if(isLatest()) setTimeout(next, 800);
+                          }
+                          break;
+                        case 83:
+                          if(!timerIsRunning) {
+                            detriggerLeft();
+                            detriggerRight();
+                            matchResults[currentQuestion] = 3;
+                            let qupdates = {};
+                            qupdates["/matches/"+roundID+"/"+user.email.split("\.")[0]+"/score/"+currentQuestion] = 3;
+                            firebase.database().ref().update(qupdates);
+                            updateScores();
+                            if(isLatest()) setTimeout(next, 10);
+                          }
+                          break;
+                      }
+                    }
+                  });
+                  
+                  firebase.database().ref("/teams/abbrev").on('value', (s) => {
+                    s = s.val();
+                    toggleEnabled(s["started"]);
+                    document.getElementsByClassName("abbrev")[0].innerHTML = s[snap.val()["t1"]];
+                    document.getElementsByClassName("abbrev")[1].innerHTML = s[snap.val()["t2"]];
+                  });
+
+                  firebase.database().ref("/rounds/"+roundID).on('value', (s) => {
+                    s = s.val();
+                    toggleEnabled(s["started"]);
+                    document.getElementById("title").innerHTML = s["name"] + document.getElementById("title").innerHTML.substring(document.getElementById("title").innerHTML.indexOf("-") - 1);
+                    title = s["name"];
+                  });
+
+                  if(!snap.val()["score"]) {
+                    let updates = {};
+                    updates["/matches/"+roundID+"/"+user.email.split("\.")[0]+"/score"] = matchResults;
+                    firebase.database().ref().update(updates);
+                  } else {
+                    matchResults = snap.val()["score"];
+                  }
+                  if(matchResults[currentQuestion] === 0 || matchResults[currentQuestion] === 3) {
+                    detriggerRight(); detriggerLeft();
+                  } else if(matchResults[currentQuestion] === 1) {
+                    detriggerRight(); triggerLeft();
+                  } else {
+                    detriggerLeft(); triggerRight();
+                  }
+                  updateScores();
+                }
+              });
+            }
+          }
+        } else {
+          window.location = "../login.html";
+        }
+      });
+
+      function toggleEnabled(enabled) {
+        listen = enabled;
+        if(enabled) {
+          document.getElementById("time").style.fontSize = "250px";
+          document.getElementById("time").style.fontFamily = "Roboto Mono";
+          document.getElementById("time").style.margin = "30px";
+          renderTime(timeRemaining);
+        } else {
+          document.getElementById("time").style.fontSize = "100px";
+          document.getElementById("time").style.fontFamily = "Jost Bold";
+          document.getElementById("time").style.margin = "100px 0px";
+          document.getElementById("time").innerHTML = "Waiting for round to start...";
+        }
+      }
+
+      function renderTime(millis) {
+        let mins = Math.floor(millis/60000);
+        let secs = Math.floor((millis % 60000) / 1000);
+        let centi = Math.round((millis % 1000) / 10);
+        if(secs == 60) {mins++; secs=0};
+        if(secs < 10) secs = "0"+secs;
+        if(centi > 99) centi %= 100;
+        if(centi < 10) centi = "0"+centi;
+        document.getElementById("time").innerHTML = `${mins}:${secs}.${centi}`;
+      }
+
+      function toggleTimer() {
+        if(!timerIsRunning) {
+          t0 = Date.now();
+          timerIsRunning = true;
+          tInt = setInterval(() => {
+            let tr = timeRemaining - (Date.now() - t0);
+            if(tr <= 0) toggleTimer();
+            else renderTime(tr);
+          }, 10);
+        } else {
+          clearInterval(tInt);
+          timerIsRunning = false;
+          timeRemaining -= Date.now() - t0;
+          timeRemaining = Math.max(timeRemaining, 0);
+          renderTime(timeRemaining);
+        }
+      }
+
+      function next() {
+        if(currentQuestion === numquestions - 1) {
+          return;
+        }
+        currentQuestion++;
+        let curscore = getScores();
+        if(currentQuestion === numquestions - 1) {
+          if(curscore[0] !== curscore[1]) promptCompletion();
+          document.getElementById("title").innerHTML = title + " - Sudden Death";
+        } else if(currentQuestion === numquestions - 3) {
+          if(curscore[0] !== curscore[1]) promptCompletion();
+          document.getElementById("title").innerHTML = title + " - Tiebreaker 1";
+        } else if(currentQuestion === numquestions - 2) {
+          if(curscore[0] !== curscore[1]) promptCompletion();
+          document.getElementById("title").innerHTML = title + " - Tiebreaker 2";
+        } else {
+          document.getElementById("title").innerHTML = title + " - Question " + (currentQuestion+1);
+        }
+        t0 = null;
+        clearInterval(tInt);
+        tInt = null;
+        timerIsRunning = false;
+        timeRemaining = timePerQuestion;
+        renderTime(timeRemaining);
+        if(matchResults[currentQuestion] === 0 || matchResults[currentQuestion] === 3) {
+          detriggerRight(); detriggerLeft();
+        } else if(matchResults[currentQuestion] === 1) {
+          detriggerRight(); triggerLeft();
+        } else {
+          detriggerLeft(); triggerRight();
+        }
+      }
+      function prev() {
+        if(currentQuestion === 0) {
+          return;
+        }
+        currentQuestion--;
+        if(currentQuestion === numquestions - 3) {
+          // todo check sum here
+          document.getElementById("title").innerHTML = title + " - Tiebreaker 1";
+        } else if(currentQuestion === numquestions - 2) {
+          // todo check sum here
+          document.getElementById("title").innerHTML = title + " - Tiebreaker 2";
+        } else {
+          document.getElementById("title").innerHTML = title + " - Question " + (currentQuestion+1);
+        }
+        
+        t0 = null;
+        clearInterval(tInt);
+        tInt = null;
+        timerIsRunning = false;
+        timeRemaining = timePerQuestion;
+        renderTime(timeRemaining);
+        if(matchResults[currentQuestion] === 0 || matchResults[currentQuestion] === 3) {
+          detriggerRight(); detriggerLeft();
+        } else if(matchResults[currentQuestion] === 1) {
+          detriggerRight(); triggerLeft();
+        } else {
+          detriggerLeft(); triggerRight();
+        }
+      }
+
+      function triggerLeft() { document.getElementsByClassName("card")[0].classList.add("card-clicked"); }
+      function triggerRight() { document.getElementsByClassName("card")[1].classList.add("card-clicked"); }
+      function detriggerLeft() { document.getElementsByClassName("card")[0].classList.remove("card-clicked"); }
+      function detriggerRight() { document.getElementsByClassName("card")[1].classList.remove("card-clicked"); }
+
+      function isLatest() {
+        // generally: all previous indices up to and including currentQuestion are non-zero, and all future indices are zero.
+        for(let i = 0; i <= currentQuestion; i++) {
+          if(matchResults[i] === 0) return false;
+        }
+        for(let i = currentQuestion+1; i < numquestions; i++) {
+          if(matchResults[i] !== 0) return false;
+        }
+        return true;
+      }
+
+      function getScores() {
+        let t1Score = 0;
+        let t2Score = 0;
+        for(let i = 0; i <= numquestions; i++) {
+          if(matchResults[i] === 1) t1Score++;
+          else if(matchResults[i] === 2) t2Score++;
+        }
+        return [t1Score, t2Score];
+      }
+
+      function updateScores() {
+        let a = getScores();
+        document.getElementsByClassName("score")[0].innerHTML = a[0];
+        document.getElementsByClassName("score")[1].innerHTML = a[1];
+      }
+
+      function promptCompletion() {
+        document.getElementById("overlay").style.backgroundColor = "rgba(0,0,0,0.2)";
+        document.getElementById("overlay").style.pointerEvents = 'auto';
+        document.getElementById("overlay").style.cursor = 'auto';
+        document.getElementById("overlay").innerHTML = `
+          <div style="background-color:white;padding:20px;border-radius:10px;width:300px;position:relative">
+            <div style="position:absolute;color:#aaa;font-size:20px;cursor:pointer;top: 25px; right: 25px;" onclick="unloadCompletion()">⨉</div>
+            <div style="font-family: 'Jost', Arial, Helvetica, sans-serif; font-size: 30px;margin-bottom: 5px">Round complete</div>
+            <div style="background-color:#9e1c43;color:white;font-family:'Jost Bold';cursor:pointer;border-radius:5px;padding:5px;font-size:20px;text-align:center" onclick="end()">
+              Submit round results
+            </div>
+          </div>
+        `;
+      }
+      function unloadCompletion() {
+        document.getElementById("overlay").style.backgroundColor = "rgba(0,0,0,0)";
+        document.getElementById("overlay").style.pointerEvents = 'none';
+        document.getElementById("overlay").style.cursor = 'none';
+        document.getElementById("overlay").innerHTML = "";
+      }
+
+      function end() {
+        let updates = {};
+        updates["/matches/"+roundID+"/"+userr.email.split("\.")[0]+"/status"] = 2;
+        firebase.database().ref().update(updates);
+        document.getElementById("overlay").style.backgroundColor = "white";
+        document.getElementById("overlay").style.pointerEvents = 'auto';
+        let scores = getScores();
+        firebase.database().ref("/teams/names").once("value").then((snap) => {
+          document.getElementById("overlay").innerHTML = `
+            <div>
+              <h4>${title} Match Results</h4>
+              <div class="resbox ${(scores[0] > scores[1]) ? "winner" : "loser"}">
+                <div class="finalScore">${scores[0]}</div>
+                <div class="teamname">${snap.val()[t1id]}</div>
+              </div>
+              <div class="resbox ${(scores[0] < scores[1]) ? "winner" : "loser"}">
+                <div class="finalScore">${scores[1]}</div>
+                <div class="teamname">${snap.val()[t2id]}</div>
+              </div>
+            </div>`;
+        });
+      }
+    </script>
+  </body>
+</html>
