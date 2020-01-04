@@ -452,7 +452,7 @@
         timerIsRunning = false;
         timeRemaining = timePerQuestion;
         renderTime(timeRemaining);
-        if(matchResults[currentQuestion] === 0 || matchResults[currentQuestion] === 3) {
+        if(matchResults[currentQuestion] === 0 || matchResults[currentQuestion] === 3 || matchResults[currentQuestion] === undefined) {
           detriggerRight(); detriggerLeft();
         } else if(matchResults[currentQuestion] === 1) {
           detriggerRight(); triggerLeft();
@@ -481,7 +481,7 @@
         timerIsRunning = false;
         timeRemaining = timePerQuestion;
         renderTime(timeRemaining);
-        if(matchResults[currentQuestion] === 0 || matchResults[currentQuestion] === 3) {
+        if(matchResults[currentQuestion] === 0 || matchResults[currentQuestion] === 3 || matchResults[currentQuestion] === undefined) {
           detriggerRight(); detriggerLeft();
         } else if(matchResults[currentQuestion] === 1) {
           detriggerRight(); triggerLeft();
@@ -544,12 +544,20 @@
       }
 
       function end() {
+        let scores = getScores();
         let updates = {};
         updates["/matches/"+roundID+"/"+userr.email.split("\.")[0]+"/status"] = 2;
+        let scorekey = firebase.database().ref().child('/scores').push().key;
+        updates["/scores/"+scorekey] = {
+          "roundID" : roundID,
+          "t1": t1id,
+          "t2": t2id,
+          "s1": scores[0],
+          "s2": scores[1]
+        };
         firebase.database().ref().update(updates);
         document.getElementById("overlay").style.backgroundColor = "white";
         document.getElementById("overlay").style.pointerEvents = 'auto';
-        let scores = getScores();
         firebase.database().ref("/teams/names").once("value").then((snap) => {
           document.getElementById("overlay").innerHTML = `
             <div>

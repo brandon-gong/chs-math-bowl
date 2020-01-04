@@ -3,15 +3,42 @@
   <head>
     <meta charset="utf-8">
     <title>Admin Console | CHS Math Bowl</title>
-    <link rel="stylesheet" href="../../css/vendor/bootstrap.min.css">
-    <link rel="stylesheet" href="../../css/vendor/bootstrap-theme.min.css">
     <link rel="stylesheet" href="../../css/main.css" type="text/css">
     <link rel="stylesheet" href="../../css/internal/admin-console.css" type="text/css">
     <style>
+
+      /****************************/
+      * {
+        box-sizing: border-box;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 500;
+        line-height: 1.1;
+        color: inherit;
+        margin-top: 20px;
+      }
+      h3 {
+        margin-bottom: 10px;
+      }
+      a {
+        line-height: 1.42857143;
+        text-decoration: none;
+        background-color: transparent;
+      }
+      body {
+        line-height: 1.42857143;
+        margin: 0;
+        font-size: 14px;
+        background-color: #fff;
+        color: black;
+      }
+      /****************************/
+
       .greek {
         color: #9e1c43;
         font-size: 20px;
         margin-left: 5px;
+        font-family: "Jost";
       }
       .user-header {
         display: flex;
@@ -102,8 +129,6 @@
     <script src="/__/firebase/7.5.0/firebase-auth.js"></script>
     <script src="/__/firebase/7.5.0/firebase-database.js"></script>
     <script src="/__/firebase/init.js"></script>
-    <script type="text/javascript" src="../../js/vendor/jquery-1.11.2.min.js"></script>
-    <script type="text/javascript" src="../../js/vendor/bootstrap.min.js"></script>
     <script>
 
       // table of greek
@@ -120,7 +145,7 @@
               let isDisabled = (snap.val()[user].number === undefined);
               ih += '<div class="card">' +
                     '  <div class="user-header">' +
-                    '      <span class="greek" ' + ((isDisabled) ? 'style="color: #888"' : '') + '>' + greeks[user] + ' | ' + user +  ((isDisabled) ? ' (disabled)' : '') + '</span>' +
+                    '      <span id="greek_cardheader_' + user + '" class="greek" ' + ((isDisabled) ? 'style="color: #888"' : '') + '>' + greeks[user] + ' | ' + user +  ((isDisabled) ? ' (disabled)' : '') + '</span>' +
                     // '      <a onclick=updateUserData(\"' + user + '\") class="write-changes" ' + ((isDisabled) ? 'style="background-color: #888"' : '') + '>Write changes</a>' +
                     '  </div>' +
                     '  <div class="inputs">' +
@@ -153,6 +178,7 @@
       }
 
       function updateUserData(u) {
+
         let updates = {};
         updates["/rooms/" + u + "/names"] = (document.getElementById("names_" + u).value.trim()) ? (document.getElementById("names_" + u).value.trim()) : null;
         updates["/rooms/" + u + "/number"] = (document.getElementById("number_" + u).value.trim()) ? (document.getElementById("number_" + u).value.trim()) : null;

@@ -3,11 +3,36 @@
   <head>
     <meta charset="utf-8">
     <title>Admin Console | CHS Math Bowl</title>
-    <link rel="stylesheet" href="../../css/vendor/bootstrap.min.css">
-    <link rel="stylesheet" href="../../css/vendor/bootstrap-theme.min.css">
     <link rel="stylesheet" href="../../css/main.css" type="text/css">
     <link rel="stylesheet" href="../../css/internal/admin-console.css" type="text/css">
     <style>
+      /****************************/
+      * {
+        box-sizing: border-box;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 500;
+        line-height: 1.1;
+        color: inherit;
+        margin-top: 20px;
+      }
+      h3 {
+        margin-bottom: 10px;
+      }
+      a {
+        line-height: 1.42857143;
+        text-decoration: none;
+        background-color: transparent;
+      }
+      body {
+        line-height: 1.42857143;
+        margin: 0;
+        font-size: 14px;
+        background-color: #fff;
+        color: black;
+      }
+      /****************************/
+
       #wrapper {
         -webkit-user-select: none;     
         -moz-user-select: none;
@@ -297,8 +322,6 @@
     <script src="/__/firebase/7.5.0/firebase-auth.js"></script>
     <script src="/__/firebase/7.5.0/firebase-database.js"></script>
     <script src="/__/firebase/init.js"></script>
-    <script type="text/javascript" src="../../js/vendor/jquery-1.11.2.min.js"></script>
-    <script type="text/javascript" src="../../js/vendor/bootstrap.min.js"></script>
     <script>
       let isShowing;
 
@@ -442,7 +465,7 @@
                 ${teamSelect}
                 <div onclick="toggleallchecks(0)" class="invert-selection">Invert selection</div>
               </form>
-              <h4>Teams to include</h4>
+              <h4>Rooms to include</h4>
               <form>
                 ${roomSelect}
                 <div onclick="toggleallchecks(1)" class="invert-selection">Invert selection</div>
@@ -463,27 +486,126 @@
         });
       }
 
-      // i wrote code, but i dont know what it means, so its just going to be a magic black box for now
-      function genRR(l,t){let e=[],n=[],h=!1;if(t.length%2==1&&(t.push(-1),h=!0),0===l.length)return[];for(let l=0;l<t.length-1;l++){for(let l=0;l<t.length/2;l++)n.push([t[l],t[t.length-l-1]]);let l=t.shift();t.push(t.shift()),t.unshift(l)}if(l.length<=t.length/2-(h?1:0)){n=n.filter(l=>!l.includes(-1));for(let t=0;t<n.length%l.length;t++)n.push(null);for(let t=0;t<n.length;t+=l.length){let h,r,f,g=n.slice(t,t+l.length);for(f=g.length-1;f>0;f--)h=Math.floor(Math.random()*(f+1)),r=g[f],g[f]=g[h],g[h]=r;for(f=0;f<g.length;f++){let t,e;null==g[f]?g[f]=[l[f],null]:(Math.random()>=.5?(t=g[f][0],e=g[f][1]):(t=g[f][1],e=g[f][0]),g[f]=[l[f],t,e])}e.push(g)}}else{n=n.filter(l=>!l.includes(-1));let r=0,f=t.length/2-(h?1:0),g=l.length-f;for(let t=0;t<n.length;t+=f){let h,o,u,s=n.slice(t,t+f);for(u=s.length-1;u>0;u--)h=Math.floor(Math.random()*(u+1)),o=s[u],s[u]=s[h],s[h]=o;for(let l=0;l<g;l++)s.splice((r+l)%(f+g),0,null);for(r+=g,u=0;u<s.length;u++){let t,e;null==s[u]?s[u]=[l[u],null]:(Math.random()>=.5?(t=s[u][0],e=s[u][1]):(t=s[u][1],e=s[u][0]),s[u]=[l[u],t,e])}e.push(s)}}return e}
+      function genRR(rooms, teams) {
 
+        let bye = -1; // can be anything but discourage strings because may cause clashes
+        let result = [];
+        let temp = [];
+        let byed = false;
 
-        function processTemplate(str, n) {
-          let evals = str.match(/\{[^{}]*\}/g);
-          console.log(evals);
-          let result = str;
-          for(let e of evals) {
-            console.log(result);
-            let i = result.indexOf(e);
-            let replacement = "";
-            try {
-              replacement = eval(e.substring(1, e.length - 1).replace(/[^0-9+*\-/()%.n]/g, ""));
-            } catch(e) {
-              replacement = n;
-            }
-            result = result.substring(0, i) + replacement + result.substring(i + e.length);
-          }
-          return result;
+        if(teams.length % 2 === 1) {
+          teams.push(bye);
+          byed = true;
         }
+
+        // crashes on this case so handle separately
+        if(rooms.length === 0) return [];
+          
+        for(let i = 0; i < teams.length - 1; i++) {
+            for(let j = 0; j < teams.length / 2; j++) {
+                temp.push([teams[j], teams[teams.length - j - 1]]);
+            }
+            //temp.push("r");
+            let x = teams.shift();
+            teams.push(teams.shift());
+            teams.unshift(x);
+        }
+
+        // temp = temp.filter((match) => {
+        //   return localData["teams"]["names"][match[0]].substring(0, localData["teams"]["names"][match[0]].length - 1) !== localData["teams"]["names"][match[1]].substring(0, localData["teams"]["names"][match[1]].length - 1)});
+
+        if(rooms.length <= teams.length / 2 - (byed ? 1 : 0)) {
+          // strip all byed matches away and pad end with rests
+          temp = temp.filter((match) => !match.includes(bye));
+          for(let i = 0; i < temp.length % rooms.length; i++) temp.push(null);
+
+          // now, collect all matches for each round in matrix
+          // randomize matrix by rows/cols, and assign to rooms.
+          for(let i = 0; i < temp.length; i += rooms.length) {
+            let round = temp.slice(i, i + rooms.length);
+            let j, x, k;
+            for (k = round.length - 1; k > 0; k--) {
+              j = Math.floor(Math.random() * (k + 1));
+              x = round[k];
+              round[k] = round[j];
+              round[j] = x;
+            }
+            for(k = 0; k < round.length; k++) {
+              let a,b;
+              if(round[k] == null) round[k] = [rooms[k], null];
+              else {
+                if(Math.random() >= 0.5) {
+                  a = round[k][0];
+                  b = round[k][1];
+                } else {
+                  a = round[k][1];
+                  b = round[k][0];
+                }
+                round[k] = [rooms[k], a, b];
+              }
+            }
+            result.push(round);
+          }
+        } else {
+          // some kind of overemployment happening
+          // still don't want byes
+          temp = temp.filter((match) => !match.includes(bye));
+
+          let restIndex = 0;
+          let rSize = teams.length / 2 - (byed ? 1 : 0);
+          let dRest = rooms.length - rSize;
+
+          for(let i = 0; i < temp.length; i+= rSize) {
+            let round = temp.slice(i, i + rSize);
+            let j, x, k;
+            for (k = round.length - 1; k > 0; k--) {
+              j = Math.floor(Math.random() * (k + 1));
+              x = round[k];
+              round[k] = round[j];
+              round[j] = x;
+            }
+
+            for(let j = 0; j < dRest; j++) {
+              round.splice((restIndex+j) % (rSize+dRest), 0, null);
+            }
+            restIndex += dRest;
+
+            for(k = 0; k < round.length; k++) {
+              let a,b;
+              if(round[k] == null) round[k] = [rooms[k], null];
+              else {
+                if(Math.random() >= 0.5) {
+                  a = round[k][0];
+                  b = round[k][1];
+                } else {
+                  a = round[k][1];
+                  b = round[k][0];
+                }
+                round[k] = [rooms[k], a, b];
+              }
+            }
+            result.push(round);
+          }
+        }
+        return result;
+      }
+
+
+      function processTemplate(str, n) {
+        let evals = str.match(/\{[^{}]*\}/g);
+        let result = str;
+        for(let e of evals) {
+          let i = result.indexOf(e);
+          let replacement = "";
+          try {
+            replacement = eval(e.substring(1, e.length - 1).replace(/[^0-9+*\-/()%.n]/g, ""));
+          } catch(e) {
+            replacement = n;
+          }
+          result = result.substring(0, i) + replacement + result.substring(i + e.length);
+        }
+        return result;
+      }
 
 
       function genRounds() {

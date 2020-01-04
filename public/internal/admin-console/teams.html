@@ -3,11 +3,37 @@
   <head>
     <meta charset="utf-8">
     <title>Admin Console | CHS Math Bowl</title>
-    <link rel="stylesheet" href="../../css/vendor/bootstrap.min.css">
-    <link rel="stylesheet" href="../../css/vendor/bootstrap-theme.min.css">
     <link rel="stylesheet" href="../../css/main.css" type="text/css">
     <link rel="stylesheet" href="../../css/internal/admin-console.css" type="text/css">
     <style>
+
+      /****************************/
+      * {
+        box-sizing: border-box;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 500;
+        line-height: 1.1;
+        color: inherit;
+        margin-top: 20px;
+      }
+      h3 {
+        margin-bottom: 10px;
+      }
+      a {
+        line-height: 1.42857143;
+        text-decoration: none;
+        background-color: transparent;
+      }
+      body {
+        line-height: 1.42857143;
+        margin: 0;
+        font-size: 14px;
+        background-color: #fff;
+        color: black;
+      }
+      /****************************/
+
       .ib {
         display: inline-flex;
         width: 300px;
@@ -41,7 +67,7 @@
         text-decoration: none;
         outline: none;
         cursor: pointer;
-        margin-top: -20px;
+        margin-top: -2px;
       }
       .special {
         justify-content: center;
@@ -239,8 +265,6 @@
     <script src="/__/firebase/7.5.0/firebase-auth.js"></script>
     <script src="/__/firebase/7.5.0/firebase-database.js"></script>
     <script src="/__/firebase/init.js"></script>
-    <script type="text/javascript" src="../../js/vendor/jquery-1.11.2.min.js"></script>
-    <script type="text/javascript" src="../../js/vendor/bootstrap.min.js"></script>
     <script>
 
       let localData;
