@@ -170,7 +170,7 @@
       
       let numquestions = 18;
       let currentQuestion = 0;
-      let timePerQuestion = 120000;
+      let timePerQuestion = 30000;
 
       let timerIsRunning = false;
       let timeRemaining = timePerQuestion;
@@ -407,7 +407,8 @@
         if(secs < 10) secs = "0"+secs;
         if(centi > 99) centi %= 100;
         if(centi < 10) centi = "0"+centi;
-        document.getElementById("time").innerHTML = `${mins}:${secs}.${centi}`;
+        //document.getElementById("time").innerHTML = `${mins}:${secs}.${centi}`; // SHIM JAN 29 2020 REMOVE MINS
+        document.getElementById("time").innerHTML = `${secs}:${centi}`;
       }
 
       function toggleTimer() {

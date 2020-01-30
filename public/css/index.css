@@ -1,22 +1,41 @@
-p {
-  font-family: "Jost Black";
-  font-size: 30vh;
-  line-height: 1;
+* {
+  box-sizing: border-box;
+}
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
+}
+h1 {
+  color: white;
+  font-family: "Jost Medium";
+  font-size: 70px;
   margin: 0;
 }
-
-#wrap {
-  width: 5vw;
-  text-justify: distribute;
-}
-
 body {
-  padding: 5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  background-color: #9e1c43;
+  cursor: none;
+}
+#wrapper {
+  cursor: pointer;
+}
+#schedule {
+  color: white;
+  font-family: "Jost", Arial, Helvetica, sans-serif;
+  font-size: 30px;
+  margin-top: 10px;
 }
 
-#dragon {
-  height: 2vh;
-  margin-bottom: 5vh;
-  margin-right: 0vh;
-  display: inline-block;
+::selection {
+  background: #555;
+  color: white;
+}
+::moz-selection {
+  background: #555;
+  color: white;
 }

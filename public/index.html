@@ -8,8 +8,62 @@
     <link rel="stylesheet" href="css/index.css" type="text/css">
   </head>
   <body>
-    <div id="wrap">
-      <p><img src="dragon.svg" id="dragon">CHS MATH BOWL.</p>
-    </div>
+    <div id="wrapper" contenteditable=true></div>
+    <script src="/__/firebase/7.5.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.5.0/firebase-auth.js"></script>
+    <script src="/__/firebase/7.5.0/firebase-database.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script>
+      let e = document.getElementById("wrapper");
+      firebase.database().ref("/displayMode").on("value", (snap) => {
+        switchScreen(snap.val());
+      });
+
+      function switchScreen(displayType) {
+        e.innerHTML = "";
+        switch(displayType) {
+          case 0: renderDragon(); break;
+          case 1: renderLiveScore(); break;
+          case 2: renderRank(); break;
+          case 3: renderSchedule(); break;
+        }
+      }
+
+      function renderDragon() {
+        e.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;flex-direction:column">
+          <img src='whitedragon.svg' style="height: 30vh">
+          <div style="font-family:'Jost Bold';color:white;margin-top:3vh;font-size:4vh">CHS MATH BOWL</div>
+        </div>
+        `;
+      }
+
+      let scheduleih = `
+        7:00am - 8:00am Check-in<br>
+        8:00am - 9:00am Opening Ceremony<br>
+        9:00am - 9:30am Round 1<br>
+        9:30am - 10:00am Round 2<br>
+        10:00am - 10:30am Round 3<br>
+        10:30am - 11:00am Round 4<br>
+        11:00am - 11:30am Round 5<br>
+        11:30am - 12:00pm Round 6<br>
+        12:00pm - 1:00pm Lunch<br>
+        1:00pm - 1:30pm Round of 16<br>
+        1:30pm - 2:00pm Quarterfinals<br>
+        2:00pm - 2:30pm Semifinals<br>
+        2:30pm - 3:00pm Championship<br>
+      `;
+
+      function renderSchedule() {
+        // todo make editable from firebase
+        e.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;flex-direction:column">
+          <h1>Competition Schedule</h1>
+          <div id="schedule" oninput="scheduleih=document.getElementById('schedule').innerHTML">${scheduleih}</div>
+        </div>
+        `;
+      }
+
+    </script>
   </body>
 </html>

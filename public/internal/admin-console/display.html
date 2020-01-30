@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Admin Console | CHS Math Bowl</title>
+    <link rel="stylesheet" href="../../css/main.css" type="text/css">
+    <link rel="stylesheet" href="../../css/internal/admin-console.css" type="text/css">
+    <style>
+
+      /****************************/
+      * {
+        box-sizing: border-box;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 500;
+        line-height: 1.1;
+        color: inherit;
+        margin-top: 20px;
+      }
+      h3 {
+        margin-bottom: 10px;
+      }
+      a {
+        line-height: 1.42857143;
+        text-decoration: none;
+        background-color: transparent;
+      }
+      body {
+        line-height: 1.42857143;
+        margin: 0;
+        font-size: 14px;
+        background-color: #fff;
+        color: black;
+      }
+      /****************************/
+      .display-card {
+        padding: 0px;
+        width: min-content;
+        font-size: 20px;
+        color: #888;
+        display: inline-flex;
+        flex-direction: column;
+        cursor: pointer;
+        transition: 300ms;
+      }
+      .display-card > img {
+        width: 300px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        filter: opacity(.4);
+        transition: inherit;
+      }
+      .caption-header {
+        font-family: "Jost Medium";
+      }
+      .caption-content {
+        font-family: "Jost";
+      }
+      .selected {
+        color: black;
+      }
+      .selected > img {
+        filter: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="nav">
+      <img src="../../dragon.svg" id="dragon">
+      <h3>chs math</h3>
+      <div id="spacer"></div>
+      <a href="index.html">Overview</a>
+      <a href="teams.html">School Teams</a>
+      <a href="rounds.html">Matches Setup</a>
+      <a href="scores.html">Scores</a>
+      <a href="#" id="current">Display Switcher</a>
+      <a href="settings.html">Other Settings</a>
+      <a onclick="signOut()">Sign out</a>
+    </div>
+
+    <div id="wrapper">
+      <h1>Display Switcher</h1>
+      <div id="option0" class="display-card card" onclick="select(0)">
+        <img src="../../dragon_preview.png">
+        <div style="padding: 15px">
+          <div class="caption-header">Simple Dragon</div>
+          <div class="caption-content">CHS dragon logo, centered (useful when nothing else needs to be displayed)</div>
+        </div>
+      </div>
+      <div id="option3" class="display-card card" onclick="select(3)">
+        <img src="../../schedule_preview.png">
+        <div style="padding: 15px">
+          <div class="caption-header">Schedule</div>
+          <div class="caption-content">Show the day's schedule, ex. round times, lunch time, etc.</div>
+        </div>
+      </div>
+    </div>
+    <script src="/__/firebase/7.5.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.5.0/firebase-auth.js"></script>
+    <script src="/__/firebase/7.5.0/firebase-database.js"></script>
+    <script src="/__/firebase/init.js"></script>
+    <script>
+      function signOut() {
+        firebase.auth().signOut().then(function() {
+          window.location = "../login.html";
+        }).catch(function(error) {});
+      }
+
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          if(user.email !== "admin.mathbowl@brandongong.org") {
+            window.location = "../dashboard/index.html";
+          }
+          firebase.database().ref('/displayMode').on('value', (snap) => {
+            for(let elem of document.getElementById("wrapper").children) {
+              elem.classList.remove("selected");
+            }
+            document.getElementById("option"+snap.val()).classList.add("selected");
+          });
+        } else {
+          window.location = "../login.html";
+        }
+      });
+
+      function select(x) {
+        firebase.database().ref().update({"displayMode":x});
+      }
+    </script>
+  </body>
+</html>
