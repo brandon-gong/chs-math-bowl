@@ -625,6 +625,7 @@
         localData["rounds"][roundID]["started"] = !localData["rounds"][roundID]["started"];
         let updates = {};
         updates["/rounds/"+roundID+"/started"] = localData["rounds"][roundID]["started"];
+        updates["/lastActiveRound"] = roundID;
         firebase.database().ref().update(updates);
       }
 
