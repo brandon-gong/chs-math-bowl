@@ -149,6 +149,33 @@
         font-size: 70px;
         margin-right: 20px;
       }
+
+      #dots {
+        position: fixed;
+        bottom: 30px;
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        align-items: middle;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin: 3px 18px;
+
+      }
+      .unanswered {
+        background-color: #bbb;
+      }
+      .answered {
+        background-color: #9e1c43;
+      }
+      .activedot {
+        border: 3px solid black;
+        margin: 0px 15px !important;
+      }
     </style>
   </head>
   <body>
@@ -289,7 +316,7 @@
 
                   t1id = snap.val()["t1"];
                   t2id = snap.val()["t2"];
-
+                  renderProgressDots();
                   document.addEventListener("keydown", (event) => {
                     if(event.keyCode === 220 && !timerIsRunning) window.location = "index.html";
                     if(listen) {
@@ -460,6 +487,7 @@
         } else {
           detriggerLeft(); triggerRight();
         }
+        renderProgressDots();
       }
       function prev() {
         if(currentQuestion === 0) {
@@ -489,6 +517,7 @@
         } else {
           detriggerLeft(); triggerRight();
         }
+        renderProgressDots();
       }
 
       function triggerLeft() { document.getElementsByClassName("card")[0].classList.add("card-clicked"); }
@@ -572,7 +601,16 @@
                 <div class="teamname">${snap.val()[t2id]}</div>
               </div>
             </div>`;
+          document.getElementById("dots").style.display = "none";
         });
+      }
+
+      function renderProgressDots() {
+        if(!document.getElementById("dots")) document.getElementById("container").innerHTML += "<div id='dots'></div>";
+        document.getElementById("dots").innerHTML = "";
+        for(let i = 0; i < matchResults.length; i++) {
+          document.getElementById("dots").innerHTML += `<div class="dot ${(matchResults[i] === 0) ? "unanswered" : "answered"} ${(i === currentQuestion) ? "activedot" : ""}"></div>`;
+        }
       }
     </script>
   </body>
