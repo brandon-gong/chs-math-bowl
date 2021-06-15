@@ -5,64 +5,7 @@
     <title>Admin Console | CHS Math Bowl</title>
     <link rel="stylesheet" href="../../css/main.css" type="text/css">
     <link rel="stylesheet" href="../../css/internal/admin-console.css" type="text/css">
-    <style>
-
-      /****************************/
-      * {
-        box-sizing: border-box;
-      }
-      h1, h2, h3, h4, h5, h6 {
-        font-weight: 500;
-        line-height: 1.1;
-        color: inherit;
-        margin-top: 20px;
-      }
-      h3 {
-        margin-bottom: 10px;
-      }
-      a {
-        line-height: 1.42857143;
-        text-decoration: none;
-        background-color: transparent;
-      }
-      body {
-        line-height: 1.42857143;
-        margin: 0;
-        font-size: 14px;
-        background-color: #fff;
-        color: black;
-      }
-      /****************************/
-      .display-card {
-        padding: 0px;
-        width: min-content;
-        font-size: 20px;
-        color: #888;
-        display: inline-flex;
-        flex-direction: column;
-        cursor: pointer;
-        transition: 300ms;
-      }
-      .display-card > img {
-        width: 300px;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-        filter: opacity(.4);
-        transition: inherit;
-      }
-      .caption-header {
-        font-family: "Jost Medium";
-      }
-      .caption-content {
-        font-family: "Jost";
-      }
-      .selected {
-        color: black;
-      }
-      .selected > img {
-        filter: none;
-      }
-    </style>
+    <link rel="stylesheet" href="../../css/internal/admin_console/display.css" type="text/css">
   </head>
   <body>
     <div id="nav">
@@ -121,32 +64,6 @@
     <script src="/__/firebase/7.5.0/firebase-auth.js"></script>
     <script src="/__/firebase/7.5.0/firebase-database.js"></script>
     <script src="/__/firebase/init.js"></script>
-    <script>
-      function signOut() {
-        firebase.auth().signOut().then(function() {
-          window.location = "../login.html";
-        }).catch(function(error) {});
-      }
-
-      firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-          if(user.email !== "admin.mathbowl@brandongong.org") {
-            window.location = "../dashboard/index.html";
-          }
-          firebase.database().ref('/displayMode').on('value', (snap) => {
-            for(let elem of document.getElementById("wrapper").children) {
-              elem.classList.remove("selected");
-            }
-            document.getElementById("option"+snap.val()).classList.add("selected");
-          });
-        } else {
-          window.location = "../login.html";
-        }
-      });
-
-      function select(x) {
-        firebase.database().ref().update({"displayMode":x});
-      }
-    </script>
+    <script src="../../js/internal/admin_console/display.js"></script>
   </body>
 </html>

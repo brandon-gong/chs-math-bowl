@@ -1,0 +1,164 @@
+html, body {
+	padding: 0;
+	margin: 0;
+	user-select: none;
+	/*cursor: none;*/
+}
+#logocontainer {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
+	justify-content: center;
+	position: absolute;
+	top: 20px;
+}
+#container {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+#title {
+	font-family: "Jost Thin";
+	font-size: 50px;
+	color: #333;
+}
+#time {
+	font-family: "Jost Bold", Arial, Helvetica, sans-serif;
+	color: #333;
+	font-size: 100px;
+	margin: 100px 0px;
+	padding: 0px;
+}
+
+.card {
+	border-radius: 8px;
+	box-shadow: 0px 0px 10px 0px #ddd;
+	padding: 10px;
+	background-color: white;
+	/*margin: 20px;
+	height: 230px;
+	width: 230px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	transition: 400ms;*/
+}
+
+#scores-container {
+	display: flex;
+	flex-direction: row;
+}
+
+.score {
+	color: #9e1c43;
+	font-family: "Jost", Arial, Helvetica, sans-serif;
+	font-size: 100px;
+}
+
+.abbrev {
+	color: #333;
+	font-family: "Jost Bold";
+	font-size: 40px;
+}
+
+.card-hover > .abbrev {
+	text-decoration: 5px #eee underline;
+}
+
+.card-clicked {
+	background-color: #9e1c43 !important;
+}
+.card-clicked > .score, .card-clicked > .abbrev {
+	color: white !important;
+	text-decoration: none !important;
+}
+
+#dragon {
+	height: 150px;
+}
+#home-box {
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+h1 {
+	font-family: "Jost Medium", Arial, Helvetica, sans-serif;
+	color: black;
+	text-transform: none;
+	font-size: 40px;
+	margin: 0px;
+	margin-top: 10px;
+}
+h4 {
+	font-family: "Jost Thin", Arial, Helvetica, sans-serif;
+	color: black;
+	margin: 0px;
+	font-size: 20px;
+	margin-bottom: 20px;
+	cursor: pointer;
+}
+#matches-list {
+	height: 500px;
+	width: 30vw;
+	overflow-y: scroll;
+	scrollbar-width: none;
+	padding: 10px;
+	font-family: "Jost", Arial, Helvetica, sans-serif;
+}
+#matches-list::-webkit-scrollbar {
+		width: 0;
+		height: 0;
+}
+.round-name-card {
+	font-family: "Jost Medium", Arial, Helvetica, sans-serif;
+	font-size: 25px;
+	color: black;
+}
+.round-competitors-card {
+	font-family: "Jost", Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	color: #888;
+}
+.listitem {
+	cursor: pointer;
+	padding: 10px 20px;
+	margin-bottom: 15px;
+	transition: 300ms;
+}
+.listitem:hover {
+	color: white !important;
+	background-color: #9e1c43;
+}
+.listitem:hover > .round-name-card, .listitem:hover > .round-competitors-card {
+	color: white;
+}
+
+#logocontainer > #dragon {
+	height: 30px;
+	display: inline-block;
+}
+#logocontainer > h1 {
+	font-family: "Jost Medium", Futura, Helvetica, Arial, sans-serif;
+	text-transform: uppercase;
+	font-size: 20px;
+	color: #9e1c43;
+	text-align: center;
+}
+#scores-container > .card {
+	margin: 20px;
+	height: 230px;
+	width: 230px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	transition: 400ms;
+}

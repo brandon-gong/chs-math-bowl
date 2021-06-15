@@ -39,3 +39,8 @@ body {
   background: #555;
   color: white;
 }
+
+b {
+  font-family: "Jost Medium", Arial, Helvetica, sans-serif;
+  font-weight: 600;
+}

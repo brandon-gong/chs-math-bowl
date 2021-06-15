@@ -1,0 +1,55 @@
+/****************************/
+* {
+	box-sizing: border-box;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 500;
+	line-height: 1.1;
+	color: inherit;
+	margin-top: 20px;
+}
+h3 {
+	margin-bottom: 10px;
+}
+a {
+	line-height: 1.42857143;
+	text-decoration: none;
+	background-color: transparent;
+}
+body {
+	line-height: 1.42857143;
+	margin: 0;
+	font-size: 14px;
+	background-color: #fff;
+	color: black;
+}
+/****************************/
+.display-card {
+	padding: 0px;
+	width: min-content;
+	font-size: 20px;
+	color: #888;
+	display: inline-flex;
+	flex-direction: column;
+	cursor: pointer;
+	transition: 300ms;
+}
+.display-card > img {
+	width: 300px;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	filter: opacity(.4);
+	transition: inherit;
+}
+.caption-header {
+	font-family: "Jost Medium";
+}
+.caption-content {
+	font-family: "Jost";
+}
+.selected {
+	color: black;
+}
+.selected > img {
+	filter: none;
+}

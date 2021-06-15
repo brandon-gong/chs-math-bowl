@@ -1,0 +1,87 @@
+/****************************/
+* {
+	box-sizing: border-box;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 500;
+	line-height: 1.1;
+	color: inherit;
+	margin-top: 20px;
+}
+h3 {
+	margin-bottom: 10px;
+}
+a {
+	line-height: 1.42857143;
+	text-decoration: none;
+	background-color: transparent;
+}
+body {
+	line-height: 1.42857143;
+	margin: 0;
+	font-size: 14px;
+	background-color: #fff;
+	color: black;
+}
+/****************************/
+
+.greek {
+	color: #9e1c43;
+	font-size: 20px;
+	margin-left: 5px;
+	font-family: "Jost";
+}
+.user-header {
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;
+	margin-bottom: 10px;
+}
+.write-changes, .write-changes:focus, .write-changes:visited {
+	background-color: #9e1c43;
+	padding: 4px 10px;
+	font-size: 12px;
+	font-family: "Jost";
+	border-radius: 4px;
+	color: white;
+	outline: none;
+	cursor: pointer;
+	text-decoration: none;
+}
+.write-changes:hover {
+	background-color: #ffbb00;
+	color: black;
+	text-decoration: none;
+}
+input {
+	border: none;
+	border-bottom: 3px solid #ddd;
+	font-family: "Jost";
+	font-size: 15px;
+	padding-left: 10px;
+	flex-grow: 1;
+}
+input:focus {
+	border-bottom: 3px solid #9e1c43;
+	outline: none;
+}
+::placeholder {
+	color: #bbb;
+	font-family: "Jost Italic";
+}
+.inputs {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	justify-content: space-between;
+}
+p {
+	font-family: "Jost";
+	font-size: 15px;
+	color: black;
+	white-space: nowrap;
+}
+.input-group {
+	display: flex;
+	flex-direction: row;
+}

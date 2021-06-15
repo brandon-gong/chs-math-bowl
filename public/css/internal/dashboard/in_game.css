@@ -1,0 +1,170 @@
+html, body {
+	padding: 0;
+	margin: 0;
+	user-select: none;
+	overflow: hidden;
+	/*cursor: none;*/
+}
+body {
+	cursor: none;
+}
+#logocontainer {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
+	justify-content: center;
+	position: absolute;
+	top: 20px;
+}
+#container {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	font-family: "Jost";
+}
+#title {
+	font-family: "Jost Thin";
+	font-size: 50px;
+	color: #333;
+}
+#time {
+	font-family: "Jost Bold", Arial, Helvetica, sans-serif;
+	color: #333;
+	font-size: 100px;
+	margin: 100px 0px;
+	padding: 0px;
+}
+
+.card {
+	border-radius: 8px;
+	box-shadow: 0px 0px 10px 0px #ddd;
+	padding: 10px;
+	background-color: white;
+	margin: 20px;
+	height: 230px;
+	width: 230px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	transition: 200ms;
+}
+
+#scores-container {
+	display: flex;
+	flex-direction: row;
+}
+
+.score {
+	color: #9e1c43;
+	font-family: "Jost", Arial, Helvetica, sans-serif;
+	font-size: 100px;
+}
+
+.abbrev {
+	color: #333;
+	font-family: "Jost Bold";
+	font-size: 40px;
+	text-transform: uppercase;
+}
+
+.card-hover > .abbrev {
+	text-decoration: 5px #eee underline;
+}
+
+.card-clicked {
+	background-color: #9e1c43 !important;
+}
+.card-clicked > .score, .card-clicked > .abbrev {
+	color: white !important;
+	text-decoration: none !important;
+}
+#logocontainer > #dragon {
+	height: 30px;
+	display: inline-block;
+}
+#logocontainer > h1 {
+	font-family: "Jost Medium", Futura, Helvetica, Arial, sans-serif;
+	text-transform: uppercase;
+	font-size: 20px;
+	color: #9e1c43;
+	text-align: center;
+}
+
+#overlay {
+	background-color: none;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	pointer-events: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+h4 {
+	font-family: "Jost Medium", Arial, Helvetica, sans-serif;
+	font-size: 66px;
+	margin: 0;
+}
+.resbox {
+	height: 30vh;
+	width: 80vw;
+	margin-top: 20px;
+	display: flex;
+	flex-direction: row;
+	border: 5px solid #9e1c43;
+	padding: 0 2.5vh;
+	align-items: center;
+	justify-content: space-between;
+}
+.winner {
+	background-color: #9e1c43;
+	color: white;
+}
+.loser {
+	background-color: white;
+	color: #9e1c43;
+}
+.finalScore {
+	font-size: 25vh;
+	font-family: "Jost Thin", Arial, Helvetica, sans-serif;
+}
+.teamname {
+	font-family: "Jost", Arial, Helvetica, sans-serif;
+	font-size: 70px;
+	margin-right: 20px;
+}
+
+#dots {
+	position: fixed;
+	bottom: 30px;
+	display: flex;
+	width: 100%;
+	flex-direction: row;
+	justify-content: center;
+	align-items: middle;
+}
+.dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	margin: 3px 18px;
+
+}
+.unanswered {
+	background-color: #bbb;
+}
+.answered {
+	background-color: #9e1c43;
+}
+.activedot {
+	border: 3px solid black;
+	margin: 0px 15px !important;
+}
