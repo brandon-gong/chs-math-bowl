@@ -24,50 +24,8 @@ A clearer screenshot of the overview panel on the admin console from the first i
 
 ---
 
-# Tournament Manager for CHS Math Bowl
-Firebase + HTML/CSS app. 3 major parts: auditorium display, room displays, admin console.
-
-Admin console can manipulate schedule, delete/change/add scores, toggle auditorium display between next round's schedule / live scores for current round / team rankings.
-
-Rank calculations happen automatically as scores come in.
-
-Each room has a live-updating list of matches on its schedule, which volunteers can click on and run. After each round, a final score is displayed on the TV, and the score is also logged in firebase, which triggers updates on admin console and auditorium display.
-
----
-
-![alt text](images/admin.jpg)
-The auditorium display showing live scores from the current round. In the foreground, the admin console shows progress of each room (each row of squares is a room, each column is a given question, and each square indicates which team got the question correct).
-
----
-
-![alt text](images/dispute.jpg)
-A screenshot of the disputes panel on the admin console, which shows results from every match. Admin console can change, delete, or add scores synthetically (this feature is included to handle any potential disputes on problem correctness that may come up).
-
----
-
 ![alt text](images/queue.jpg)
 The TV in one of the match rooms, showing the queue of matches the room needed to run on its schedule. Each room hosted matches during each preliminary round, which is why the list is quite long.
-
----
-
-# Tournament Manager for CHS Math Bowl
-Firebase + HTML/CSS app. 3 major parts: auditorium display, room displays, admin console.
-
-Admin console can manipulate schedule, delete/change/add scores, toggle auditorium display between next round's schedule / live scores for current round / team rankings.
-
-Rank calculations happen automatically as scores come in.
-
-Each room has a live-updating list of matches on its schedule, which volunteers can click on and run. After each round, a final score is displayed on the TV, and the score is also logged in firebase, which triggers updates on admin console and auditorium display.
-
----
-
-![alt text](images/admin.jpg)
-The auditorium display showing live scores from the current round. In the foreground, the admin console shows progress of each room (each row of squares is a room, each column is a given question, and each square indicates which team got the question correct).
-
----
-
-![alt text](images/dispute.jpg)
-A screenshot of the disputes panel on the admin console, which shows results from every match. Admin console can change, delete, or add scores synthetically (this feature is included to handle any potential disputes on problem correctness that may come up).
 
 ---
 
